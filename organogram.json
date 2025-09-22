@@ -1,0 +1,357 @@
+{
+  "organization_info": {
+    "company_name": "[COMPANY NAME]",
+    "company_code": "[COMPANY_CODE]",
+    "last_updated": "2025-09-22T18:45:00.000000",
+    "structure_type": "hierarchical"
+  },
+  "departments": {
+    "executive": {
+      "name": "Executive Leadership",
+      "code": "EXEC",
+      "level": 1,
+      "parent": null,
+      "roles": {
+        "CEO": {
+          "title": "Chief Executive Officer",
+          "name": "[CEO NAME]",
+          "email": "[CEO_EMAIL]",
+          "phone": "[CEO_PHONE]",
+          "responsibilities": [
+            "Overall strategic direction",
+            "Final policy approval",
+            "Corporate governance",
+            "Stakeholder relations"
+          ],
+          "reports_to": "board_of_directors",
+          "policy_authority": "executive"
+        },
+        "COO": {
+          "title": "Chief Operating Officer",
+          "name": "[COO NAME]",
+          "email": "[COO_EMAIL]",
+          "phone": "[COO_PHONE]",
+          "responsibilities": [
+            "Daily operations oversight",
+            "Process improvement",
+            "Operational policy approval"
+          ],
+          "reports_to": "CEO",
+          "policy_authority": "operational"
+        }
+      }
+    },
+    "human_resources": {
+      "name": "Human Resources",
+      "code": "HR",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "HR_DIRECTOR": {
+          "title": "Human Resources Director",
+          "name": "[HR DIRECTOR]",
+          "email": "[HR_EMAIL]",
+          "phone": "[HR_PHONE]",
+          "responsibilities": [
+            "Employee policy development",
+            "HR compliance oversight",
+            "Training coordination",
+            "Performance management policies"
+          ],
+          "reports_to": "CEO",
+          "policy_authority": "departmental"
+        },
+        "HR_MANAGER": {
+          "title": "HR Manager",
+          "name": "[HR MANAGER]",
+          "email": "[HR_MANAGER_EMAIL]",
+          "phone": "[HR_MANAGER_PHONE]",
+          "responsibilities": [
+            "Policy implementation",
+            "Employee relations",
+            "Benefits administration"
+          ],
+          "reports_to": "HR_DIRECTOR",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "finance": {
+      "name": "Finance Department",
+      "code": "FIN",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "CFO": {
+          "title": "Chief Financial Officer",
+          "name": "[CFO NAME]",
+          "email": "[CFO_EMAIL]",
+          "phone": "[CFO_PHONE]",
+          "responsibilities": [
+            "Financial policy oversight",
+            "Budget approval",
+            "Financial compliance",
+            "Risk management"
+          ],
+          "reports_to": "CEO",
+          "policy_authority": "departmental"
+        },
+        "FINANCE_MANAGER": {
+          "title": "Finance Manager",
+          "name": "[FINANCE MANAGER]",
+          "email": "[FINANCE_MANAGER_EMAIL]",
+          "phone": "[FINANCE_MANAGER_PHONE]",
+          "responsibilities": [
+            "Financial procedures",
+            "Expense policy implementation",
+            "Financial reporting"
+          ],
+          "reports_to": "CFO",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "it_department": {
+      "name": "Information Technology",
+      "code": "IT",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "CTO": {
+          "title": "Chief Technology Officer",
+          "name": "[CTO NAME]",
+          "email": "[CTO_EMAIL]",
+          "phone": "[CTO_PHONE]",
+          "responsibilities": [
+            "IT policy development",
+            "Technology strategy",
+            "Information security oversight",
+            "Digital transformation"
+          ],
+          "reports_to": "CEO",
+          "policy_authority": "departmental"
+        },
+        "IT_SECURITY_MANAGER": {
+          "title": "IT Security Manager",
+          "name": "[IT_SEC_MANAGER]",
+          "email": "[IT_SEC_EMAIL]",
+          "phone": "[IT_SEC_PHONE]",
+          "responsibilities": [
+            "Cybersecurity policies",
+            "Data protection compliance",
+            "Security incident response",
+            "Access control management"
+          ],
+          "reports_to": "CTO",
+          "policy_authority": "specialized"
+        },
+        "IT_MANAGER": {
+          "title": "IT Manager",
+          "name": "[IT MANAGER]",
+          "email": "[IT_MANAGER_EMAIL]",
+          "phone": "[IT_MANAGER_PHONE]",
+          "responsibilities": [
+            "IT service delivery",
+            "System administration",
+            "Technology support policies"
+          ],
+          "reports_to": "CTO",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "legal_compliance": {
+      "name": "Legal & Compliance",
+      "code": "LEG",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "GENERAL_COUNSEL": {
+          "title": "General Counsel",
+          "name": "[GENERAL COUNSEL]",
+          "email": "[LEGAL_EMAIL]",
+          "phone": "[LEGAL_PHONE]",
+          "responsibilities": [
+            "Legal policy review",
+            "Regulatory compliance",
+            "Contract management",
+            "Legal risk assessment"
+          ],
+          "reports_to": "CEO",
+          "policy_authority": "legal"
+        },
+        "COMPLIANCE_OFFICER": {
+          "title": "Compliance Officer",
+          "name": "[COMPLIANCE OFFICER]",
+          "email": "[COMPLIANCE_EMAIL]",
+          "phone": "[COMPLIANCE_PHONE]",
+          "responsibilities": [
+            "Compliance monitoring",
+            "Policy adherence oversight",
+            "Audit coordination",
+            "Regulatory reporting"
+          ],
+          "reports_to": "GENERAL_COUNSEL",
+          "policy_authority": "compliance"
+        }
+      }
+    },
+    "operations": {
+      "name": "Operations",
+      "code": "OPS",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "OPERATIONS_DIRECTOR": {
+          "title": "Operations Director",
+          "name": "[OPS DIRECTOR]",
+          "email": "[OPS_EMAIL]",
+          "phone": "[OPS_PHONE]",
+          "responsibilities": [
+            "Operational procedures",
+            "Process standardization",
+            "Quality management",
+            "Health & safety policies"
+          ],
+          "reports_to": "COO",
+          "policy_authority": "operational"
+        },
+        "QUALITY_MANAGER": {
+          "title": "Quality Manager",
+          "name": "[QUALITY MANAGER]",
+          "email": "[QUALITY_EMAIL]",
+          "phone": "[QUALITY_PHONE]",
+          "responsibilities": [
+            "Quality assurance policies",
+            "Process improvement",
+            "Standards compliance"
+          ],
+          "reports_to": "OPERATIONS_DIRECTOR",
+          "policy_authority": "specialized"
+        },
+        "SAFETY_OFFICER": {
+          "title": "Health & Safety Officer",
+          "name": "[SAFETY OFFICER]",
+          "email": "[SAFETY_EMAIL]",
+          "phone": "[SAFETY_PHONE]",
+          "responsibilities": [
+            "Workplace safety policies",
+            "Risk assessment",
+            "Safety training coordination",
+            "Incident investigation"
+          ],
+          "reports_to": "OPERATIONS_DIRECTOR",
+          "policy_authority": "specialized"
+        }
+      }
+    },
+    "training_development": {
+      "name": "Training & Development",
+      "code": "TRN",
+      "level": 3,
+      "parent": "human_resources",
+      "roles": {
+        "TRAINING_MANAGER": {
+          "title": "Training Manager",
+          "name": "[TRAINING MANAGER]",
+          "email": "[TRAINING_EMAIL]",
+          "phone": "[TRAINING_PHONE]",
+          "responsibilities": [
+            "Policy training programs",
+            "Training material development",
+            "Training compliance tracking",
+            "Skills development policies"
+          ],
+          "reports_to": "HR_DIRECTOR",
+          "policy_authority": "specialized"
+        }
+      }
+    }
+  },
+  "policy_authority_levels": {
+    "executive": {
+      "description": "Can approve any organizational policy",
+      "approval_scope": "all",
+      "can_override": true
+    },
+    "departmental": {
+      "description": "Can approve policies within their department",
+      "approval_scope": "departmental",
+      "can_override": false
+    },
+    "operational": {
+      "description": "Can approve operational and process policies",
+      "approval_scope": "operational",
+      "can_override": false
+    },
+    "specialized": {
+      "description": "Can approve policies in their area of expertise",
+      "approval_scope": "specialized",
+      "can_override": false
+    },
+    "legal": {
+      "description": "Can approve legal and compliance policies",
+      "approval_scope": "legal_compliance",
+      "can_override": false
+    },
+    "compliance": {
+      "description": "Can review and monitor policy compliance",
+      "approval_scope": "compliance_monitoring",
+      "can_override": false
+    },
+    "implementation": {
+      "description": "Responsible for implementing and maintaining policies",
+      "approval_scope": "implementation",
+      "can_override": false
+    }
+  },
+  "responsibility_matrix": {
+    "policy_types": {
+      "hr_policies": {
+        "primary_owner": "HR_DIRECTOR",
+        "approver": "CEO",
+        "implementer": "HR_MANAGER",
+        "compliance_monitor": "COMPLIANCE_OFFICER",
+        "trainer": "TRAINING_MANAGER"
+      },
+      "it_security_policies": {
+        "primary_owner": "IT_SECURITY_MANAGER",
+        "approver": "CTO",
+        "implementer": "IT_MANAGER",
+        "compliance_monitor": "COMPLIANCE_OFFICER",
+        "legal_reviewer": "GENERAL_COUNSEL"
+      },
+      "financial_policies": {
+        "primary_owner": "CFO",
+        "approver": "CEO",
+        "implementer": "FINANCE_MANAGER",
+        "compliance_monitor": "COMPLIANCE_OFFICER"
+      },
+      "operational_policies": {
+        "primary_owner": "OPERATIONS_DIRECTOR",
+        "approver": "COO",
+        "implementer": "OPERATIONS_DIRECTOR",
+        "compliance_monitor": "COMPLIANCE_OFFICER"
+      },
+      "safety_policies": {
+        "primary_owner": "SAFETY_OFFICER",
+        "approver": "OPERATIONS_DIRECTOR",
+        "implementer": "SAFETY_OFFICER",
+        "compliance_monitor": "COMPLIANCE_OFFICER",
+        "trainer": "TRAINING_MANAGER"
+      },
+      "legal_compliance_policies": {
+        "primary_owner": "GENERAL_COUNSEL",
+        "approver": "CEO",
+        "implementer": "COMPLIANCE_OFFICER",
+        "compliance_monitor": "COMPLIANCE_OFFICER"
+      },
+      "quality_policies": {
+        "primary_owner": "QUALITY_MANAGER",
+        "approver": "OPERATIONS_DIRECTOR",
+        "implementer": "QUALITY_MANAGER",
+        "compliance_monitor": "COMPLIANCE_OFFICER"
+      }
+    }
+  }
+}
