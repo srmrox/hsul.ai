@@ -732,20 +732,28 @@ def batch_initialize_projects():
         try:
             with open(config_file, 'r', encoding='utf-8') as f:
                 existing_config = json.load(f)
-            print("📋 Found existing configuration")
+            print("📋 Found existing configuration - using saved settings")
+            lm_studio_url = existing_config.get('lm_studio_url', 'http://localhost:1234')
+            model_name = existing_config.get('model_name', 'local-model')
+            print(f"   LM Studio URL: {lm_studio_url}")
+            print(f"   Model Name: {model_name}")
         except Exception as e:
             print(f"⚠️  Could not load existing config: {e}")
+            existing_config = {}
     
-    # Get LM Studio configuration
-    default_url = existing_config.get('lm_studio_url', 'http://localhost:1234')
-    lm_studio_url = input(f"Enter LM Studio URL (default: {default_url}): ").strip()
-    if not lm_studio_url:
-        lm_studio_url = default_url
-    
-    default_model = existing_config.get('model_name', 'local-model')
-    model_name = input(f"Enter model name (default: {default_model}): ").strip()
-    if not model_name:
-        model_name = default_model
+    # Only ask for configuration if not found in existing config
+    if not existing_config:
+        print("\n⚙️  LM Studio Configuration Required")
+        # Get LM Studio configuration
+        default_url = 'http://localhost:1234'
+        lm_studio_url = input(f"Enter LM Studio URL (default: {default_url}): ").strip()
+        if not lm_studio_url:
+            lm_studio_url = default_url
+        
+        default_model = 'local-model'
+        model_name = input(f"Enter model name (default: {default_model}): ").strip()
+        if not model_name:
+            model_name = default_model
     
     # Initialize client
     print(f"\n🔌 Connecting to LM Studio at {lm_studio_url}...")
@@ -891,9 +899,14 @@ def single_manual_mode():
         try:
             with open(config_file, 'r', encoding='utf-8') as f:
                 existing_config = json.load(f)
-            print("📋 Found existing configuration")
+            print("📋 Found existing configuration - using saved settings")
+            lm_studio_url = existing_config.get('lm_studio_url', 'http://localhost:1234')
+            model_name = existing_config.get('model_name', 'local-model')
+            print(f"   LM Studio URL: {lm_studio_url}")
+            print(f"   Model Name: {model_name}")
         except Exception as e:
             print(f"⚠️  Could not load existing config: {e}")
+            existing_config = {}
     
     # Get user input
     project_name = input("Enter project folder name: ").strip()
@@ -901,15 +914,18 @@ def single_manual_mode():
         print("❌ Project name is required!")
         return
     
-    default_url = existing_config.get('lm_studio_url', 'http://localhost:1234')
-    lm_studio_url = input(f"Enter LM Studio URL (default: {default_url}): ").strip()
-    if not lm_studio_url:
-        lm_studio_url = default_url
-    
-    default_model = existing_config.get('model_name', 'local-model')
-    model_name = input(f"Enter model name (default: {default_model}): ").strip()
-    if not model_name:
-        model_name = default_model
+    # Only ask for configuration if not found in existing config
+    if not existing_config:
+        print("\n⚙️  LM Studio Configuration Required")
+        default_url = 'http://localhost:1234'
+        lm_studio_url = input(f"Enter LM Studio URL (default: {default_url}): ").strip()
+        if not lm_studio_url:
+            lm_studio_url = default_url
+        
+        default_model = 'local-model'
+        model_name = input(f"Enter model name (default: {default_model}): ").strip()
+        if not model_name:
+            model_name = default_model
     
     manual_description = input("Describe the policy manual you want to create: ").strip()
     if not manual_description:
