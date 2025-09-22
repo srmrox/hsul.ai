@@ -8,42 +8,42 @@
   },
   "COMPANY_PHONE": {
     "description": "Main phone number for the organization",
-    "default_value": "+923018510470",
+    "default_value": "[PHONE NUMBER]",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
   },
   "COMPANY_EMAIL": {
     "description": "General contact email address",
-    "default_value": "mail@hsco.pk",
+    "default_value": "[EMAIL ADDRESS]",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
   },
   "COMPANY_WEBSITE": {
     "description": "Organization's website URL",
-    "default_value": "hsco.pk",
+    "default_value": "[WEBSITE URL]",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
   },
   "JURISDICTION": {
     "description": "Legal jurisdiction governing this policy",
-    "default_value": "Pakistan",
+    "default_value": "[JURISDICTION]",
     "category": "legal",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
   },
   "BUSINESS_HOURS": {
     "description": "Standard operating hours for the organization",
-    "default_value": "9 to 5, Monday to Friday",
+    "default_value": "[BUSINESS HOURS]",
     "category": "operations",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
   },
   "EMERGENCY_CONTACT": {
     "description": "Emergency contact information or number",
-    "default_value": "+923124462772",
+    "default_value": "[EMERGENCY CONTACT]",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
@@ -64,7 +64,7 @@
   },
   "FISCAL_YEAR": {
     "description": "Organization's fiscal year period",
-    "default_value": "July 1 to June 30",
+    "default_value": "[FISCAL YEAR]",
     "category": "dates",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"

@@ -1,7 +1,7 @@
 {
   "organization_info": {
-    "company_name": "[COMPANY NAME]",
-    "company_code": "[COMPANY_CODE]",
+    "company_name": "Hina Shahrukh & Co.",
+    "company_code": "HSCO",
     "last_updated": "2025-09-22T18:45:00.000000",
     "structure_type": "hierarchical"
   },
@@ -12,32 +12,261 @@
       "level": 1,
       "parent": null,
       "roles": {
-        "CEO": {
-          "title": "Chief Executive Officer",
-          "name": "[CEO NAME]",
-          "email": "[CEO_EMAIL]",
-          "phone": "[CEO_PHONE]",
+        "MANAGING_PARTNER": {
+          "title": "Managing Partner",
+          "name": "[MANAGING PARTNER]",
+          "email": "[MP_EMAIL]",
+          "phone": "[MP_PHONE]",
           "responsibilities": [
             "Overall strategic direction",
             "Final policy approval",
-            "Corporate governance",
-            "Stakeholder relations"
+            "Partner relations",
+            "Business development"
           ],
-          "reports_to": "board_of_directors",
+          "reports_to": "partners",
           "policy_authority": "executive"
         },
-        "COO": {
-          "title": "Chief Operating Officer",
-          "name": "[COO NAME]",
-          "email": "[COO_EMAIL]",
-          "phone": "[COO_PHONE]",
+        "DIRECTOR": {
+          "title": "Director",
+          "name": "[DIRECTOR NAME]",
+          "email": "[DIRECTOR_EMAIL]",
+          "phone": "[DIRECTOR_PHONE]",
+          "responsibilities": [
+            "Departmental oversight",
+            "Client relations",
+            "Quality assurance",
+            "Team management"
+          ],
+          "reports_to": "partners",
+          "policy_authority": "executive"
+        }
+      }
+    },
+    "assurance": {
+      "name": "Assurance Department",
+      "code": "ASR",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "SENIOR_MANAGER_ASR": {
+          "title": "Senior Manager - Assurance",
+          "name": "[ASR SENIOR MANAGER]",
+          "email": "[ASR_SM_EMAIL]",
+          "phone": "[ASR_SM_PHONE]",
+          "responsibilities": [
+            "Audit planning and execution",
+            "Quality control procedures",
+            "Client relationship management",
+            "Team supervision"
+          ],
+          "reports_to": "DIRECTOR",
+          "policy_authority": "departmental"
+        },
+        "MANAGER_ASR": {
+          "title": "Manager - Assurance",
+          "name": "[ASR MANAGER]",
+          "email": "[ASR_MGR_EMAIL]",
+          "phone": "[ASR_MGR_PHONE]",
+          "responsibilities": [
+            "Audit procedures implementation",
+            "Staff supervision",
+            "Client coordination"
+          ],
+          "reports_to": "SENIOR_MANAGER_ASR",
+          "policy_authority": "operational"
+        },
+        "ASSISTANT_MANAGER_ASR": {
+          "title": "Assistant Manager - Assurance",
+          "name": "[ASR ASST MANAGER]",
+          "email": "[ASR_AM_EMAIL]",
+          "phone": "[ASR_AM_PHONE]",
+          "responsibilities": [
+            "Audit execution",
+            "Junior staff guidance",
+            "Working paper review"
+          ],
+          "reports_to": "MANAGER_ASR",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "consulting": {
+      "name": "Consulting Department",
+      "code": "CON",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "SENIOR_MANAGER_CON": {
+          "title": "Senior Manager - Consulting",
+          "name": "[CON SENIOR MANAGER]",
+          "email": "[CON_SM_EMAIL]",
+          "phone": "[CON_SM_PHONE]",
+          "responsibilities": [
+            "Consulting project management",
+            "Business advisory services",
+            "Client solutions development",
+            "Team leadership"
+          ],
+          "reports_to": "DIRECTOR",
+          "policy_authority": "departmental"
+        },
+        "MANAGER_CON": {
+          "title": "Manager - Consulting",
+          "name": "[CON MANAGER]",
+          "email": "[CON_MGR_EMAIL]",
+          "phone": "[CON_MGR_PHONE]",
+          "responsibilities": [
+            "Project execution",
+            "Client deliverables",
+            "Team coordination"
+          ],
+          "reports_to": "SENIOR_MANAGER_CON",
+          "policy_authority": "operational"
+        }
+      }
+    },
+    "taxation": {
+      "name": "Taxation Department",
+      "code": "TAX",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "SENIOR_MANAGER_TAX": {
+          "title": "Senior Manager - Taxation",
+          "name": "[TAX SENIOR MANAGER]",
+          "email": "[TAX_SM_EMAIL]",
+          "phone": "[TAX_SM_PHONE]",
+          "responsibilities": [
+            "Tax compliance oversight",
+            "Tax planning strategies",
+            "Client advisory services",
+            "Regulatory compliance"
+          ],
+          "reports_to": "DIRECTOR",
+          "policy_authority": "departmental"
+        },
+        "MANAGER_TAX": {
+          "title": "Manager - Taxation",
+          "name": "[TAX MANAGER]",
+          "email": "[TAX_MGR_EMAIL]",
+          "phone": "[TAX_MGR_PHONE]",
+          "responsibilities": [
+            "Tax return preparation",
+            "Client coordination",
+            "Staff supervision"
+          ],
+          "reports_to": "SENIOR_MANAGER_TAX",
+          "policy_authority": "operational"
+        },
+        "SUPERVISOR_TAX": {
+          "title": "Supervisor - Taxation",
+          "name": "[TAX SUPERVISOR]",
+          "email": "[TAX_SUP_EMAIL]",
+          "phone": "[TAX_SUP_PHONE]",
           "responsibilities": [
             "Daily operations oversight",
-            "Process improvement",
-            "Operational policy approval"
+            "Quality review",
+            "Junior staff guidance"
           ],
-          "reports_to": "CEO",
+          "reports_to": "MANAGER_TAX",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "corporate": {
+      "name": "Corporate Department",
+      "code": "CORP",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "SENIOR_MANAGER_CORP": {
+          "title": "Senior Manager - Corporate",
+          "name": "[CORP SENIOR MANAGER]",
+          "email": "[CORP_SM_EMAIL]",
+          "phone": "[CORP_SM_PHONE]",
+          "responsibilities": [
+            "Corporate compliance oversight",
+            "Company registration services",
+            "Legal documentation",
+            "Regulatory filings"
+          ],
+          "reports_to": "DIRECTOR",
+          "policy_authority": "departmental"
+        },
+        "TEAM_LEAD_CORP": {
+          "title": "Team Lead - Corporate",
+          "name": "[CORP TEAM LEAD]",
+          "email": "[CORP_TL_EMAIL]",
+          "phone": "[CORP_TL_PHONE]",
+          "responsibilities": [
+            "Team coordination",
+            "Project management",
+            "Client communication"
+          ],
+          "reports_to": "SENIOR_MANAGER_CORP",
           "policy_authority": "operational"
+        },
+        "SENIOR_ASSOCIATE_CORP": {
+          "title": "Senior Associate - Corporate",
+          "name": "[CORP SENIOR ASSOCIATE]",
+          "email": "[CORP_SA_EMAIL]",
+          "phone": "[CORP_SA_PHONE]",
+          "responsibilities": [
+            "Document preparation",
+            "Compliance monitoring",
+            "Client support"
+          ],
+          "reports_to": "TEAM_LEAD_CORP",
+          "policy_authority": "implementation"
+        }
+      }
+    },
+    "admin_finance": {
+      "name": "Administration & Finance",
+      "code": "ADFIN",
+      "level": 2,
+      "parent": "executive",
+      "roles": {
+        "FINANCE_MANAGER": {
+          "title": "Finance Manager",
+          "name": "[FINANCE MANAGER]",
+          "email": "[FIN_MGR_EMAIL]",
+          "phone": "[FIN_MGR_PHONE]",
+          "responsibilities": [
+            "Financial management",
+            "Budget oversight",
+            "Financial reporting",
+            "Cash flow management"
+          ],
+          "reports_to": "MANAGING_PARTNER",
+          "policy_authority": "departmental"
+        },
+        "ADMIN_MANAGER": {
+          "title": "Administration Manager",
+          "name": "[ADMIN MANAGER]",
+          "email": "[ADMIN_MGR_EMAIL]",
+          "phone": "[ADMIN_MGR_PHONE]",
+          "responsibilities": [
+            "Office administration",
+            "Facility management",
+            "Vendor management",
+            "Administrative policies"
+          ],
+          "reports_to": "MANAGING_PARTNER",
+          "policy_authority": "operational"
+        },
+        "ASSOCIATE_ADFIN": {
+          "title": "Associate - Admin & Finance",
+          "name": "[ADFIN ASSOCIATE]",
+          "email": "[ADFIN_ASSOC_EMAIL]",
+          "phone": "[ADFIN_ASSOC_PHONE]",
+          "responsibilities": [
+            "Administrative support",
+            "Financial documentation",
+            "Record keeping"
+          ],
+          "reports_to": "FINANCE_MANAGER",
+          "policy_authority": "implementation"
         }
       }
     },
@@ -47,223 +276,32 @@
       "level": 2,
       "parent": "executive",
       "roles": {
-        "HR_DIRECTOR": {
-          "title": "Human Resources Director",
-          "name": "[HR DIRECTOR]",
-          "email": "[HR_EMAIL]",
-          "phone": "[HR_PHONE]",
-          "responsibilities": [
-            "Employee policy development",
-            "HR compliance oversight",
-            "Training coordination",
-            "Performance management policies"
-          ],
-          "reports_to": "CEO",
-          "policy_authority": "departmental"
-        },
         "HR_MANAGER": {
           "title": "HR Manager",
           "name": "[HR MANAGER]",
-          "email": "[HR_MANAGER_EMAIL]",
-          "phone": "[HR_MANAGER_PHONE]",
+          "email": "[HR_MGR_EMAIL]",
+          "phone": "[HR_MGR_PHONE]",
           "responsibilities": [
-            "Policy implementation",
+            "HR policy development",
             "Employee relations",
-            "Benefits administration"
+            "Recruitment and selection",
+            "Performance management"
           ],
-          "reports_to": "HR_DIRECTOR",
-          "policy_authority": "implementation"
-        }
-      }
-    },
-    "finance": {
-      "name": "Finance Department",
-      "code": "FIN",
-      "level": 2,
-      "parent": "executive",
-      "roles": {
-        "CFO": {
-          "title": "Chief Financial Officer",
-          "name": "[CFO NAME]",
-          "email": "[CFO_EMAIL]",
-          "phone": "[CFO_PHONE]",
-          "responsibilities": [
-            "Financial policy oversight",
-            "Budget approval",
-            "Financial compliance",
-            "Risk management"
-          ],
-          "reports_to": "CEO",
+          "reports_to": "MANAGING_PARTNER",
           "policy_authority": "departmental"
         },
-        "FINANCE_MANAGER": {
-          "title": "Finance Manager",
-          "name": "[FINANCE MANAGER]",
-          "email": "[FINANCE_MANAGER_EMAIL]",
-          "phone": "[FINANCE_MANAGER_PHONE]",
+        "HR_ASSOCIATE": {
+          "title": "HR Associate",
+          "name": "[HR ASSOCIATE]",
+          "email": "[HR_ASSOC_EMAIL]",
+          "phone": "[HR_ASSOC_PHONE]",
           "responsibilities": [
-            "Financial procedures",
-            "Expense policy implementation",
-            "Financial reporting"
+            "HR administration",
+            "Employee records",
+            "Benefits coordination"
           ],
-          "reports_to": "CFO",
+          "reports_to": "HR_MANAGER",
           "policy_authority": "implementation"
-        }
-      }
-    },
-    "it_department": {
-      "name": "Information Technology",
-      "code": "IT",
-      "level": 2,
-      "parent": "executive",
-      "roles": {
-        "CTO": {
-          "title": "Chief Technology Officer",
-          "name": "[CTO NAME]",
-          "email": "[CTO_EMAIL]",
-          "phone": "[CTO_PHONE]",
-          "responsibilities": [
-            "IT policy development",
-            "Technology strategy",
-            "Information security oversight",
-            "Digital transformation"
-          ],
-          "reports_to": "CEO",
-          "policy_authority": "departmental"
-        },
-        "IT_SECURITY_MANAGER": {
-          "title": "IT Security Manager",
-          "name": "[IT_SEC_MANAGER]",
-          "email": "[IT_SEC_EMAIL]",
-          "phone": "[IT_SEC_PHONE]",
-          "responsibilities": [
-            "Cybersecurity policies",
-            "Data protection compliance",
-            "Security incident response",
-            "Access control management"
-          ],
-          "reports_to": "CTO",
-          "policy_authority": "specialized"
-        },
-        "IT_MANAGER": {
-          "title": "IT Manager",
-          "name": "[IT MANAGER]",
-          "email": "[IT_MANAGER_EMAIL]",
-          "phone": "[IT_MANAGER_PHONE]",
-          "responsibilities": [
-            "IT service delivery",
-            "System administration",
-            "Technology support policies"
-          ],
-          "reports_to": "CTO",
-          "policy_authority": "implementation"
-        }
-      }
-    },
-    "legal_compliance": {
-      "name": "Legal & Compliance",
-      "code": "LEG",
-      "level": 2,
-      "parent": "executive",
-      "roles": {
-        "GENERAL_COUNSEL": {
-          "title": "General Counsel",
-          "name": "[GENERAL COUNSEL]",
-          "email": "[LEGAL_EMAIL]",
-          "phone": "[LEGAL_PHONE]",
-          "responsibilities": [
-            "Legal policy review",
-            "Regulatory compliance",
-            "Contract management",
-            "Legal risk assessment"
-          ],
-          "reports_to": "CEO",
-          "policy_authority": "legal"
-        },
-        "COMPLIANCE_OFFICER": {
-          "title": "Compliance Officer",
-          "name": "[COMPLIANCE OFFICER]",
-          "email": "[COMPLIANCE_EMAIL]",
-          "phone": "[COMPLIANCE_PHONE]",
-          "responsibilities": [
-            "Compliance monitoring",
-            "Policy adherence oversight",
-            "Audit coordination",
-            "Regulatory reporting"
-          ],
-          "reports_to": "GENERAL_COUNSEL",
-          "policy_authority": "compliance"
-        }
-      }
-    },
-    "operations": {
-      "name": "Operations",
-      "code": "OPS",
-      "level": 2,
-      "parent": "executive",
-      "roles": {
-        "OPERATIONS_DIRECTOR": {
-          "title": "Operations Director",
-          "name": "[OPS DIRECTOR]",
-          "email": "[OPS_EMAIL]",
-          "phone": "[OPS_PHONE]",
-          "responsibilities": [
-            "Operational procedures",
-            "Process standardization",
-            "Quality management",
-            "Health & safety policies"
-          ],
-          "reports_to": "COO",
-          "policy_authority": "operational"
-        },
-        "QUALITY_MANAGER": {
-          "title": "Quality Manager",
-          "name": "[QUALITY MANAGER]",
-          "email": "[QUALITY_EMAIL]",
-          "phone": "[QUALITY_PHONE]",
-          "responsibilities": [
-            "Quality assurance policies",
-            "Process improvement",
-            "Standards compliance"
-          ],
-          "reports_to": "OPERATIONS_DIRECTOR",
-          "policy_authority": "specialized"
-        },
-        "SAFETY_OFFICER": {
-          "title": "Health & Safety Officer",
-          "name": "[SAFETY OFFICER]",
-          "email": "[SAFETY_EMAIL]",
-          "phone": "[SAFETY_PHONE]",
-          "responsibilities": [
-            "Workplace safety policies",
-            "Risk assessment",
-            "Safety training coordination",
-            "Incident investigation"
-          ],
-          "reports_to": "OPERATIONS_DIRECTOR",
-          "policy_authority": "specialized"
-        }
-      }
-    },
-    "training_development": {
-      "name": "Training & Development",
-      "code": "TRN",
-      "level": 3,
-      "parent": "human_resources",
-      "roles": {
-        "TRAINING_MANAGER": {
-          "title": "Training Manager",
-          "name": "[TRAINING MANAGER]",
-          "email": "[TRAINING_EMAIL]",
-          "phone": "[TRAINING_PHONE]",
-          "responsibilities": [
-            "Policy training programs",
-            "Training material development",
-            "Training compliance tracking",
-            "Skills development policies"
-          ],
-          "reports_to": "HR_DIRECTOR",
-          "policy_authority": "specialized"
         }
       }
     }
@@ -308,49 +346,70 @@
   "responsibility_matrix": {
     "policy_types": {
       "hr_policies": {
-        "primary_owner": "HR_DIRECTOR",
-        "approver": "CEO",
-        "implementer": "HR_MANAGER",
-        "compliance_monitor": "COMPLIANCE_OFFICER",
-        "trainer": "TRAINING_MANAGER"
+        "primary_owner": "HR_MANAGER",
+        "approver": "MANAGING_PARTNER",
+        "implementer": "HR_ASSOCIATE",
+        "compliance_monitor": "HR_MANAGER"
       },
       "it_security_policies": {
-        "primary_owner": "IT_SECURITY_MANAGER",
-        "approver": "CTO",
-        "implementer": "IT_MANAGER",
-        "compliance_monitor": "COMPLIANCE_OFFICER",
-        "legal_reviewer": "GENERAL_COUNSEL"
+        "primary_owner": "ADMIN_MANAGER",
+        "approver": "DIRECTOR",
+        "implementer": "ADMIN_MANAGER",
+        "compliance_monitor": "ADMIN_MANAGER"
       },
       "financial_policies": {
-        "primary_owner": "CFO",
-        "approver": "CEO",
-        "implementer": "FINANCE_MANAGER",
-        "compliance_monitor": "COMPLIANCE_OFFICER"
+        "primary_owner": "FINANCE_MANAGER",
+        "approver": "MANAGING_PARTNER",
+        "implementer": "ASSOCIATE_ADFIN",
+        "compliance_monitor": "FINANCE_MANAGER"
       },
       "operational_policies": {
-        "primary_owner": "OPERATIONS_DIRECTOR",
-        "approver": "COO",
-        "implementer": "OPERATIONS_DIRECTOR",
-        "compliance_monitor": "COMPLIANCE_OFFICER"
+        "primary_owner": "DIRECTOR",
+        "approver": "MANAGING_PARTNER",
+        "implementer": "SENIOR_MANAGER_ASR",
+        "compliance_monitor": "DIRECTOR"
       },
-      "safety_policies": {
-        "primary_owner": "SAFETY_OFFICER",
-        "approver": "OPERATIONS_DIRECTOR",
-        "implementer": "SAFETY_OFFICER",
-        "compliance_monitor": "COMPLIANCE_OFFICER",
-        "trainer": "TRAINING_MANAGER"
+      "assurance_policies": {
+        "primary_owner": "SENIOR_MANAGER_ASR",
+        "approver": "DIRECTOR",
+        "implementer": "MANAGER_ASR",
+        "compliance_monitor": "SENIOR_MANAGER_ASR"
+      },
+      "consulting_policies": {
+        "primary_owner": "SENIOR_MANAGER_CON",
+        "approver": "DIRECTOR",
+        "implementer": "MANAGER_CON",
+        "compliance_monitor": "SENIOR_MANAGER_CON"
+      },
+      "taxation_policies": {
+        "primary_owner": "SENIOR_MANAGER_TAX",
+        "approver": "DIRECTOR",
+        "implementer": "MANAGER_TAX",
+        "compliance_monitor": "SENIOR_MANAGER_TAX"
+      },
+      "corporate_policies": {
+        "primary_owner": "SENIOR_MANAGER_CORP",
+        "approver": "DIRECTOR",
+        "implementer": "TEAM_LEAD_CORP",
+        "compliance_monitor": "SENIOR_MANAGER_CORP"
       },
       "legal_compliance_policies": {
-        "primary_owner": "GENERAL_COUNSEL",
-        "approver": "CEO",
-        "implementer": "COMPLIANCE_OFFICER",
-        "compliance_monitor": "COMPLIANCE_OFFICER"
+        "primary_owner": "SENIOR_MANAGER_CORP",
+        "approver": "MANAGING_PARTNER",
+        "implementer": "SENIOR_ASSOCIATE_CORP",
+        "compliance_monitor": "SENIOR_MANAGER_CORP"
       },
       "quality_policies": {
-        "primary_owner": "QUALITY_MANAGER",
-        "approver": "OPERATIONS_DIRECTOR",
-        "implementer": "QUALITY_MANAGER",
-        "compliance_monitor": "COMPLIANCE_OFFICER"
+        "primary_owner": "DIRECTOR",
+        "approver": "MANAGING_PARTNER",
+        "implementer": "SENIOR_MANAGER_ASR",
+        "compliance_monitor": "DIRECTOR"
+      },
+      "safety_policies": {
+        "primary_owner": "ADMIN_MANAGER",
+        "approver": "DIRECTOR",
+        "implementer": "ADMIN_MANAGER",
+        "compliance_monitor": "HR_MANAGER"
       }
     }
   }
