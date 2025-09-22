@@ -1,7 +1,7 @@
 {
   "COMPANY_ADDRESS": {
     "description": "Primary business address of the organization",
-    "default_value": "[COMPANY ADDRESS]",
+    "default_value": "Lower Ground, Silver Square Plaza, Plot # 15, Street # 73, Mehr Ali Road, F-11 Markaz, Islamabad 44000, Pakistan",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"
@@ -43,7 +43,7 @@
   },
   "EMERGENCY_CONTACT": {
     "description": "Emergency contact information or number",
-    "default_value": "+923124462772",
+    "default_value": "+923018510470",
     "category": "contact",
     "added_date": "2025-09-22T18:45:00.000000",
     "source_manual": "common_variables"

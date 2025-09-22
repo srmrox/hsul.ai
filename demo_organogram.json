@@ -1,0 +1,41 @@
+{
+  "company_name": "Demo Corporation",
+  "manuals": {
+    "hr": {
+      "name": "Human Resources Policy Manual",
+      "description": "Comprehensive HR policies covering recruitment, benefits, performance management, and workplace conduct",
+      "target_roles": [
+        "hr_manager",
+        "managers",
+        "employees"
+      ]
+    },
+    "it": {
+      "name": "IT Security Policy Manual",
+      "description": "Information technology security policies including data protection, access control, and incident response",
+      "target_roles": [
+        "it_admin",
+        "managers",
+        "all_employees"
+      ]
+    },
+    "finance": {
+      "name": "Financial Policies Manual",
+      "description": "Financial procedures covering budgeting, expense management, and audit compliance",
+      "target_roles": [
+        "finance_manager",
+        "accountants",
+        "managers"
+      ]
+    }
+  },
+  "roles": {
+    "hr_manager": "Human Resources Manager",
+    "it_admin": "IT Administrator",
+    "finance_manager": "Finance Manager",
+    "managers": "Department Managers",
+    "employees": "All Employees",
+    "all_employees": "All Company Staff",
+    "accountants": "Accounting Staff"
+  }
+}

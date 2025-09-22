@@ -1,8 +1,20 @@
 #!/usr/bin/env python3
 """
-Policy Manual Content Generation
-This script generates content for sections in an initialized policy manual project.
-Stage 2 of the multi-stage policy manual generation workflow.
+Policy Manual Content Generation - Stage 3
+This script generates content for sections in policy manual projects.
+
+STAGE 3: CONTENT GENERATION
+- Generates content for policy manual sections using AI
+- Integrates user notes from Stage 2 (general and manual-specific)
+- Produces structured JSON content ready for document generation
+- Stops at JSON content generation (no document creation)
+- Prepares content for Stage 4 (Document Generation)
+
+Part of the 4-stage policy manual generation workflow:
+Stage 1: Project Initiation (init_project.py)
+Stage 2: Project Expansion (project_expansion.py)
+Stage 3: Content Generation (this script)
+Stage 4: Document Generation (generate_documents.py)
 """
 
 import requests
@@ -12,10 +24,7 @@ import os
 from datetime import datetime
 from typing import Dict, List, Optional
 from dataclasses import dataclass, asdict
-from docx import Document
-from docx.shared import Inches
-from docx.enum.text import WD_ALIGN_PARAGRAPH
-from docx.enum.style import WD_STYLE_TYPE
+from config_manager import get_config_manager
 
 
 @dataclass
@@ -87,162 +96,36 @@ class LMStudioClient:
             return None
 
 
-class DocumentGenerator:
-    """Generates RTF and DOCX formatted documents"""
-    
-    def create_rtf_manual(self, sections: List[SectionInfo], 
-                         manual_description: str, variables: Dict,
-                         filename: str = "policy_manual.rtf") -> str:
-        """Create a manually formatted RTF policy manual"""
-        rtf_content = []
-        
-        # RTF Header
-        rtf_content.append(r"{\rtf1\ansi\deff0")
-        rtf_content.append(r"{\fonttbl{\f0 Times New Roman;}\f1 Arial;}")
-        rtf_content.append(r"{\colortbl;\red0\green0\blue0;}")
-        
-        # Title
-        rtf_content.append(r"\pard\qc\f0\fs36\b POLICY MANUAL\b0\fs24\par")
-        rtf_content.append(r"\par")
-        
-        # Description
-        rtf_content.append(rf"\pard\qc\f0\fs20\b Subject: {manual_description}\b0\par")
-        rtf_content.append(r"\par")
-        
-        # Date
-        date_str = datetime.now().strftime('%B %d, %Y')
-        rtf_content.append(rf"\pard\qc\f0\fs16 Generated: {date_str}\par")
-        rtf_content.append(r"\par\par")
-        
-        # Table of Contents
-        rtf_content.append(r"\pard\ql\f0\fs24\b\ul TABLE OF CONTENTS\ul0\b0\par")
-        rtf_content.append(r"\par")
-        
-        for section in sections:
-            indent = "\\tab " * (section.number.count('.') - 1)
-            rtf_content.append(rf"\pard\ql\f0\fs18{indent}{section.number}. {section.title}\par")
-        
-        rtf_content.append(r"\par\par")
-        rtf_content.append(r"\page")  # Page break
-        
-        # Add sections
-        for section in sections:
-            if section.content.strip():
-                # Section header
-                section_header = f"Section {section.number}: {section.title}"
-                rtf_content.append(rf"\pard\ql\f0\fs20\b\ul {section_header}\ul0\b0\par")
-                rtf_content.append(r"\par")
-                
-                # Section content - escape RTF special characters and substitute variables
-                content = section.content
-                # Substitute variables
-                for var_name, var_info in variables.items():
-                    placeholder = f"[{var_name.upper().replace('_', ' ')}]"
-                    if placeholder in content:
-                        content = content.replace(placeholder, var_info.get('default_value', placeholder))
-                
-                content = content.replace('\\', '\\\\').replace('{', '\\{').replace('}', '\\}')
-                
-                # Split content into paragraphs
-                paragraphs = content.split('\n\n')
-                for paragraph in paragraphs:
-                    if paragraph.strip():
-                        clean_para = paragraph.replace('\n', ' ').strip()
-                        rtf_content.append(rf"\pard\ql\f0\fs14 {clean_para}\par")
-                        rtf_content.append(r"\par")
-                
-                rtf_content.append(r"\par")
-        
-        # RTF footer
-        rtf_content.append("}")
-        
-        # Write RTF file
-        with open(filename, 'w', encoding='utf-8') as f:
-            f.write('\n'.join(rtf_content))
-        
-        return filename
-    
-    def create_docx_manual(self, sections: List[SectionInfo], 
-                          manual_description: str, variables: Dict,
-                          filename: str = "policy_manual.docx") -> str:
-        """Create a DOCX formatted policy manual"""
-        doc = Document()
-        
-        # Title
-        title = doc.add_heading('POLICY MANUAL', 0)
-        title.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        
-        # Description
-        desc_para = doc.add_paragraph()
-        desc_run = desc_para.add_run(f'Subject: {manual_description}')
-        desc_run.bold = True
-        desc_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        
-        # Date
-        date_para = doc.add_paragraph()
-        date_run = date_para.add_run(f'Generated: {datetime.now().strftime("%B %d, %Y")}')
-        date_para.alignment = WD_ALIGN_PARAGRAPH.CENTER
-        
-        doc.add_paragraph()  # Empty line
-        
-        # Table of Contents
-        toc_heading = doc.add_heading('TABLE OF CONTENTS', level=1)
-        toc_heading.alignment = WD_ALIGN_PARAGRAPH.LEFT
-        
-        for section in sections:
-            toc_para = doc.add_paragraph()
-            indent_level = section.number.count('.') - 1
-            toc_para.paragraph_format.left_indent = Inches(0.5 * indent_level)
-            toc_para.add_run(f'{section.number}. {section.title}')
-        
-        doc.add_page_break()
-        
-        # Add sections
-        for section in sections:
-            if section.content.strip():
-                # Section header
-                section_header = f'Section {section.number}: {section.title}'
-                heading = doc.add_heading(section_header, level=2)
-                
-                # Section content with variable substitution
-                content = section.content
-                for var_name, var_info in variables.items():
-                    placeholder = f"[{var_name.upper().replace('_', ' ')}]"
-                    if placeholder in content:
-                        content = content.replace(placeholder, var_info.get('default_value', placeholder))
-                
-                # Split content into paragraphs
-                paragraphs = content.split('\n\n')
-                for paragraph in paragraphs:
-                    if paragraph.strip():
-                        clean_para = paragraph.replace('\n', ' ').strip()
-                        para = doc.add_paragraph(clean_para)
-                        para.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
-        
-        # Save document
-        doc.save(filename)
-        return filename
-
-
 class ContentGenerator:
     """Main class for generating policy manual content"""
     
     def __init__(self, project_dir: str):
         self.project_dir = project_dir
+        
+        # Initialize configuration manager
+        self.config_manager = get_config_manager()
+        
         # Use common config.json in main directory, project-specific files in project directory
         self.config_file = os.path.join(os.getcwd(), "config.json")
-        # Use common variables.json in main directory
-        self.variables_file = os.path.join(os.getcwd(), "variables.json")
         # Use common organogram.json in main directory  
         self.organogram_file = os.path.join(os.getcwd(), "organogram.json")
         self.sections_file = os.path.join(project_dir, "sections.json")
         self.status_file = os.path.join(project_dir, "status.json")
         
+        # Stage 2 note files
+        self.notes_dir = os.path.join(project_dir, "notes")
+        self.general_notes_file = os.path.join(self.notes_dir, "general_notes.txt")
+        self.manual_notes_file = os.path.join(self.notes_dir, "manual_specific_notes.txt")
+        
         self.sections: List[SectionInfo] = []
         self.config = {}
         self.variables = {}
         self.organogram = {}
-        self.client = None
+        self.client: Optional[LMStudioClient] = None
+        
+        # User notes content
+        self.general_notes = ""
+        self.manual_notes = ""
     
     def load_project(self):
         """Load project configuration and data"""
@@ -269,10 +152,8 @@ class ContentGenerator:
             sections_data = json.load(f)
             self.sections = [SectionInfo.from_dict(data) for data in sections_data]
         
-        # Load variables
-        with open(self.variables_file, 'r', encoding='utf-8') as f:
-            variables_data = json.load(f)
-            self.variables = variables_data
+        # Load variables from ConfigManager
+        self.variables = self.config_manager.get_variables_dict()
         
         # Load organogram
         if os.path.exists(self.organogram_file):
@@ -284,6 +165,47 @@ class ContentGenerator:
             self.config.get('lm_studio_url', 'http://localhost:1234'),
             self.config.get('model_name', 'local-model')
         )
+        
+        # Load user notes from Stage 2
+        self.load_user_notes()
+    
+    def load_user_notes(self):
+        """Load user notes from Stage 2 expansion"""
+        # Load general notes
+        if os.path.exists(self.general_notes_file):
+            try:
+                with open(self.general_notes_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    # Filter out comments (lines starting with #)
+                    lines = content.split('\n')
+                    filtered_lines = [line for line in lines if not line.strip().startswith('#')]
+                    self.general_notes = '\n'.join(filtered_lines).strip()
+                    
+                print(f"📝 Loaded general notes ({len(self.general_notes)} characters)")
+            except Exception as e:
+                print(f"⚠️ Could not load general notes: {e}")
+                self.general_notes = ""
+        else:
+            print("📝 No general notes found")
+            self.general_notes = ""
+        
+        # Load manual-specific notes
+        if os.path.exists(self.manual_notes_file):
+            try:
+                with open(self.manual_notes_file, 'r', encoding='utf-8') as f:
+                    content = f.read()
+                    # Filter out comments (lines starting with #)
+                    lines = content.split('\n')
+                    filtered_lines = [line for line in lines if not line.strip().startswith('#')]
+                    self.manual_notes = '\n'.join(filtered_lines).strip()
+                    
+                print(f"📝 Loaded manual-specific notes ({len(self.manual_notes)} characters)")
+            except Exception as e:
+                print(f"⚠️ Could not load manual-specific notes: {e}")
+                self.manual_notes = ""
+        else:
+            print("📝 No manual-specific notes found")
+            self.manual_notes = ""
     
     def save_sections(self):
         """Save sections to file"""
@@ -318,10 +240,10 @@ class ContentGenerator:
         variables_context = ""
         if self.variables:
             variables_context = "\n\nAvailable variables (use these placeholders in your content):\n"
-            for var_name, var_info in self.variables.items():
-                placeholder = f"[{var_name.upper().replace('_', ' ')}]"
-                variables_context += f"- {placeholder}: {var_info.get('description', 'No description')}\n"
-            variables_context += "\nUse these placeholders where appropriate in your content (e.g., [COMPANY NAME], [EFFECTIVE DATE])."
+            for var_name, var_value in self.variables.items():
+                placeholder = f"[{var_name}]"
+                variables_context += f"- {placeholder}: {var_value}\n"
+            variables_context += "\nUse these placeholders where appropriate in your content (e.g., [COMPANY_NAME], [COMPANY_EMAIL])."
         
         # Prepare organogram/responsibility context
         responsibility_context = ""
@@ -331,6 +253,19 @@ class ContentGenerator:
             for role_type, role_info in responsibilities.items():
                 responsibility_context += f"- {role_info.get('title', role_type)}: {role_info.get('name', '[NAME]')} ({role_info.get('email', '[EMAIL]')})\n"
             responsibility_context += "\nReference these roles when specifying responsibilities, approvals, or escalation procedures in your content."
+        
+        # Prepare user notes context
+        notes_context = ""
+        if self.general_notes or self.manual_notes:
+            notes_context = "\n\nUser Notes and Guidelines:"
+            
+            if self.general_notes:
+                notes_context += f"\n\nGeneral organizational notes (apply to all policies):\n{self.general_notes}"
+            
+            if self.manual_notes:
+                notes_context += f"\n\nSpecific notes for this manual:\n{self.manual_notes}"
+            
+            notes_context += "\n\nIncorporate relevant information from these notes into your content where appropriate."
         
         prompt = f"""
         You are writing a comprehensive policy manual about: {manual_description}
@@ -342,6 +277,7 @@ class ContentGenerator:
         {section.description}
         {variables_context}
         {responsibility_context}
+        {notes_context}
         
         Requirements:
         - Write 400-1000 words of detailed, professional content
@@ -362,6 +298,10 @@ class ContentGenerator:
         
         print(f"🔄 Generating content for Section {section.number}: {section.title}")
         print(f"   📝 Using description: {section.description[:100]}...")
+        
+        if not self.client:
+            print("❌ Client not initialized!")
+            return ""
         
         content = self.client.generate_response(prompt, max_tokens=1500, temperature=0.6)
         
@@ -412,44 +352,46 @@ class ContentGenerator:
         print("✅ Completed content generation for all sections")
     
     def save_to_files(self, base_filename: str):
-        """Save the manual to RTF, DOCX, and JSON formats"""
-        # Save sections data to JSON
-        json_filename = f"{base_filename}_data.json"
+        """Save the manual content to JSON format for Stage 4 processing"""
+        # Save sections data to JSON with enhanced structure for document generation
+        json_filename = f"{base_filename}_content.json"
         sections_data = [section.to_dict() for section in self.sections]
+        
+        # Enhanced content data structure for Stage 4
+        content_data = {
+            'manual_description': self.config.get('manual_description', ''),
+            'generated_date': datetime.now().isoformat(),
+            'stage': 3,
+            'stage_name': 'content_generation',
+            'project_name': self.config.get('project_name', base_filename),
+            'sections': sections_data,
+            'variables': self.variables,
+            'user_notes': {
+                'general_notes': self.general_notes,
+                'manual_specific_notes': self.manual_notes
+            },
+            'responsibilities': self.config.get('responsibilities', {}),
+            'statistics': {
+                'total_sections': len(self.sections),
+                'total_words': sum(s.word_count for s in self.sections),
+                'sections_needing_revision': sum(1 for s in self.sections if s.needs_revision),
+                'sections_with_content': sum(1 for s in self.sections if s.content.strip()),
+                'content_generation_completed': datetime.now().isoformat()
+            },
+            'ready_for_stage_4': True
+        }
+        
         with open(json_filename, 'w', encoding='utf-8') as f:
-            json.dump({
-                'manual_description': self.config.get('manual_description', ''),
-                'generated_date': datetime.now().isoformat(),
-                'sections': sections_data,
-                'variables': self.variables,
-                'statistics': {
-                    'total_sections': len(self.sections),
-                    'total_words': sum(s.word_count for s in self.sections),
-                    'sections_needing_revision': sum(1 for s in self.sections if s.needs_revision)
-                }
-            }, f, indent=2, ensure_ascii=False)
-        print(f"📁 Saved data to {json_filename}")
+            json.dump(content_data, f, indent=2, ensure_ascii=False)
         
-        # Save complete manual to RTF and DOCX files
-        doc_generator = DocumentGenerator()
+        print(f"📁 Saved content to {json_filename}")
+        print(f"✅ Stage 3 (Content Generation) output ready for Stage 4 (Document Generation)")
         
-        rtf_filename = f"{base_filename}.rtf"
-        doc_generator.create_rtf_manual(self.sections, 
-                                      self.config.get('manual_description', ''), 
-                                      self.variables, rtf_filename)
-        print(f"📁 Saved RTF manual to {rtf_filename}")
-        
-        docx_filename = f"{base_filename}.docx"
-        doc_generator.create_docx_manual(self.sections, 
-                                       self.config.get('manual_description', ''), 
-                                       self.variables, docx_filename)
-        print(f"📁 Saved DOCX manual to {docx_filename}")
-        
-        return json_filename, rtf_filename, docx_filename
+        return json_filename
 
 
-def list_available_projects() -> List[str]:
-    """List available project directories"""
+def list_available_projects(stage_filter: Optional[int] = None) -> List[str]:
+    """List available project directories, optionally filtered by stage"""
     projects = []
     for item in os.listdir('.'):
         if os.path.isdir(item) and item.endswith('_project'):
@@ -458,53 +400,94 @@ def list_available_projects() -> List[str]:
             sections_file = os.path.join(item, 'sections.json')
             
             if os.path.exists(status_file) and os.path.exists(sections_file):
+                # Check stage if filter is specified
+                if stage_filter is not None:
+                    try:
+                        with open(status_file, 'r') as f:
+                            status = json.load(f)
+                            project_stage = status.get('stage', 0)
+                            # For Stage 3, accept Stage 2 completed projects
+                            if stage_filter == 3 and project_stage not in [2, 3]:
+                                continue
+                            elif stage_filter != 3 and project_stage != stage_filter:
+                                continue
+                    except:
+                        continue
+                
                 projects.append(project_name)
     
     return projects
 
 
 def main():
-    """Main function for content generation"""
-    print("🚀 Policy Manual Content Generation")
-    print("=" * 50)
+    """Main function for Stage 3 - Content Generation"""
+    print("🚀 Stage 3: Policy Manual Content Generation")
+    print("=" * 60)
     
-    # List available projects
-    projects = list_available_projects()
+    # First check for projects ready for Stage 3 (completed Stage 2)
+    stage_3_projects = list_available_projects(stage_filter=3)
     
-    if not projects:
-        print("❌ No initialized projects found!")
-        print("Run 'python init_project.py' first to create a project.")
-        return
-    
-    print("📁 Available projects:")
-    for i, project in enumerate(projects, 1):
-        project_dir = f"{project}_project"
-        try:
-            with open(os.path.join(project_dir, 'status.json'), 'r') as f:
-                status = json.load(f)
-                description = status.get('manual_description', 'No description')
-                created = status.get('created_date', 'Unknown')
-                phase = status.get('phase', 'unknown')
-                completed = status.get('completed_sections', 0)
-                total = status.get('total_sections', 0)
-            
-            print(f"   {i}. {project}")
-            print(f"      Description: {description}")
-            print(f"      Status: {phase} ({completed}/{total} sections)")
-            print(f"      Created: {created[:10] if created != 'Unknown' else 'Unknown'}")
-            print()
-            
-        except Exception as e:
-            print(f"   {i}. {project} (Error loading info: {e})")
+    if stage_3_projects:
+        print("📁 Projects ready for Stage 3 (Content Generation):")
+        for i, project in enumerate(stage_3_projects, 1):
+            project_dir = f"{project}_project"
+            try:
+                with open(os.path.join(project_dir, 'status.json'), 'r') as f:
+                    status = json.load(f)
+                    description = status.get('manual_description', 'No description')
+                    stage = status.get('stage', 'Unknown')
+                    stage_name = status.get('stage_name', 'unknown')
+                    completed = status.get('completed_sections', 0)
+                    total = status.get('total_sections', 0)
+                
+                print(f"   {i}. {project}")
+                print(f"      Description: {description}")
+                print(f"      Status: Stage {stage} ({stage_name}) ({completed}/{total} sections)")
+                print()
+                
+            except Exception as e:
+                print(f"   {i}. {project} (Error loading info: {e})")
+    else:
+        # If no Stage 3 ready projects, show all projects
+        all_projects = list_available_projects()
+        if not all_projects:
+            print("❌ No projects found!")
+            print("Run 'python init_project.py' first to create a project,")
+            print("then 'python project_expansion.py' to prepare for content generation.")
+            return
+        
+        print("📁 Available projects (may not be ready for Stage 3):")
+        for i, project in enumerate(all_projects, 1):
+            project_dir = f"{project}_project"
+            try:
+                with open(os.path.join(project_dir, 'status.json'), 'r') as f:
+                    status = json.load(f)
+                    description = status.get('manual_description', 'No description')
+                    stage = status.get('stage', 'Unknown')
+                    stage_name = status.get('stage_name', 'unknown')
+                    completed = status.get('completed_sections', 0)
+                    total = status.get('total_sections', 0)
+                
+                print(f"   {i}. {project}")
+                print(f"      Description: {description}")
+                print(f"      Current Stage: Stage {stage} ({stage_name})")
+                if stage >= 2:
+                    print(f"      Sections: ({completed}/{total})")
+                print()
+                
+            except Exception as e:
+                print(f"   {i}. {project} (Error loading info: {e})")
+        
+        stage_3_projects = all_projects
     
     # Get user selection
     while True:
         try:
-            choice = input(f"Select project (1-{len(projects)}): ").strip()
+            choice = input(f"Select project (1-{len(stage_3_projects)}): ").strip()
             project_index = int(choice) - 1
             
-            if 0 <= project_index < len(projects):
-                selected_project = projects[project_index]
+            if 0 <= project_index < len(stage_3_projects):
+                selected_project = stage_3_projects[project_index]
                 break
             else:
                 print("Invalid selection!")
@@ -524,7 +507,7 @@ def main():
         
         # Test LM Studio connection
         print("🔌 Testing LM Studio connection...")
-        if not generator.client.test_connection():
+        if not generator.client or not generator.client.test_connection():
             print("❌ Failed to connect to LM Studio. Please check the URL and ensure LM Studio is running.")
             return
         
@@ -552,22 +535,23 @@ def main():
         
         # Save final results
         print("\n💾 Saving final results...")
-        json_file, rtf_file, docx_file = generator.save_to_files(selected_project)
+        json_file = generator.save_to_files(selected_project)
         
         # Update final status
         generator.save_status({
-            'phase': 'content_generated',
+            'stage': 3,
+            'stage_name': 'content_generation',
+            'phase': 'stage_3_completed',
             'total_sections': len(generator.sections),
             'completed_sections': len(generator.sections),
             'manual_description': generator.config.get('manual_description', ''),
-            'generation_completed': datetime.now().isoformat()
+            'generation_completed': datetime.now().isoformat(),
+            'ready_for_stage_4': True
         })
         
-        print(f"\n🎉 Content generation completed!")
-        print(f"📄 Files created:")
-        print(f"   - {json_file} (structured data)")
-        print(f"   - {rtf_file} (RTF formatted manual)")
-        print(f"   - {docx_file} (Word document)")
+        print(f"\n🎉 Stage 3 (Content Generation) completed!")
+        print(f"📄 File created:")
+        print(f"   - {json_file} (structured content for document generation)")
         
         # Show final statistics
         total_words = sum(s.word_count for s in generator.sections)
@@ -575,6 +559,13 @@ def main():
         print(f"   Total sections: {len(generator.sections)}")
         print(f"   Total words: {total_words:,}")
         print(f"   Variables used: {len(generator.variables)}")
+        if generator.general_notes:
+            print(f"   General notes: {len(generator.general_notes)} characters")
+        if generator.manual_notes:
+            print(f"   Manual notes: {len(generator.manual_notes)} characters")
+        
+        print(f"\n🚀 Next step: Run 'python generate_documents.py' for Stage 4 (Document Generation)")
+        print(f"   This will create properly formatted Word documents from the generated content.")
         
     except Exception as e:
         print(f"❌ Error during content generation: {e}")

@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+*.tmp
+
+# Project specific
+*.backup
+*_backup.*
+demo_output/
+test_output/
+temp/
+
+# Generated files during runtime
+project_*/
+content_*.json
+sections_*.json
+*_notes.txt
+generated_documents/*.docx
+
+# Keep example files and documentation
+!README.md
+!GUI_README.md
+!demo_organogram.json

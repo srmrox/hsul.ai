@@ -1,0 +1,111 @@
+metadata:
+  created_by: Policy Manual Generation System
+  format_version: '2.0'
+  last_updated: '2025-09-22T22:43:57.151883'
+  version: '1.0'
+organization:
+  contact:
+    address:
+      area: Mehr Ali Road, F-11 Markaz
+      city: Islamabad
+      country: Pakistan
+      postal_code: '44000'
+      street: 'Lower Ground, Silver Square Plaza, Plot # 15, Street # 73, Mehr Ali
+        Road, F-11 Markaz, Islamabad 44000, Pakistan'
+    digital:
+      email: mail@hsco.pk
+      linkedin: null
+      website: hsco.pk
+    phone:
+      emergency: '+923018510470'
+      finance: null
+      hr: null
+      main: '+923018510470'
+  departments:
+    finance:
+      contact: finance@hsco.pk
+      head: Chief Financial Officer
+      name: Finance & Accounts
+      responsibilities:
+      - Financial Planning
+      - Accounting
+      - Audit
+    hr:
+      contact: hr@hsco.pk
+      head: Director HR
+      name: Human Resources
+      responsibilities:
+      - Recruitment
+      - Employee Relations
+      - Compliance
+    it:
+      contact: it@hsco.pk
+      head: IT Director
+      name: Information Technology
+      responsibilities:
+      - IT Security
+      - Systems
+      - Support
+  legal:
+    governing_law: Companies Act 2017
+    jurisdiction: Pakistan
+    registration_number: null
+    regulatory_body: Securities and Exchange Commission of Pakistan
+    tax_id: null
+  operations:
+    business_hours:
+      days: Monday to Friday
+      lunch_break: 1:00 PM - 2:00 PM
+      timezone: PKT (UTC+5)
+      weekdays: 9:00 AM - 5:00 PM
+    fiscal_year:
+      current_year: 2025-2026
+      end: June 30
+      start: July 1
+  policies:
+    approval_authority: Board of Directors
+    classification: Internal Use
+    effective_date: null
+    review_cycle: Annual
+    version_control: true
+  profile:
+    industry: Healthcare Technology
+    legal_name: Healthcare Solutions Company Private Limited
+    name: HSCO (Pvt) Ltd
+    short_name: HSCO
+    size: medium
+templates:
+  business_hours_full: '{organization.operations.business_hours.days}, {organization.operations.business_hours.weekdays}'
+  company_full_name: '{organization.profile.legal_name}'
+  company_header: '{organization.profile.name}'
+  fiscal_year_period: '{organization.operations.fiscal_year.start} to {organization.operations.fiscal_year.end}'
+  full_address: '{organization.contact.address.street}, {organization.contact.address.area},
+    {organization.contact.address.city} {organization.contact.address.postal_code},
+    {organization.contact.address.country}'
+validation:
+  field_patterns:
+    email: ^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$
+    phone: ^\+[1-9]\d{10,14}$
+    website: ^[a-zA-Z0-9][a-zA-Z0-9-]{1,61}[a-zA-Z0-9]\.[a-zA-Z]{2,}$
+  field_types:
+    organization.policies.classification:
+    - Public
+    - Internal Use
+    - Confidential
+    - Restricted
+    organization.policies.review_cycle:
+    - Quarterly
+    - Semi-Annual
+    - Annual
+    - Bi-Annual
+    organization.profile.size:
+    - small
+    - medium
+    - large
+    - enterprise
+  required_fields:
+  - organization.profile.name
+  - organization.profile.legal_name
+  - organization.contact.digital.email
+  - organization.contact.phone.main
+  - organization.legal.jurisdiction

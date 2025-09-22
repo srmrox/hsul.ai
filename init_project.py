@@ -1,8 +1,19 @@
 #!/usr/bin/env python3
 """
-Policy Manual Project Initialization
+Policy Manual Project Initialization - Stage 1
 This script creates a new policy manual project with TOC and variables setup.
-Stage 1 of the multi-stage policy manual generation workflow.
+
+STAGE 1: PROJECT INITIATION
+- Generates comprehensive table of contents (sections.json) 
+- Creates variable placeholders for manual personalization
+- Sets up project structure and basic configuration
+- Prepares foundation for Stage 2 (Project Expansion)
+
+Part of the 4-stage policy manual generation workflow:
+Stage 1: Project Initiation (this script)
+Stage 2: Project Expansion (project_expansion.py) 
+Stage 3: Content Generation (generate_content.py)
+Stage 4: Document Generation (generate_documents.py)
 """
 
 import requests
@@ -12,9 +23,11 @@ import re
 import os
 import sys
 import shutil
+import argparse
 from datetime import datetime
 from typing import Dict, List, Optional, Tuple
 from dataclasses import dataclass, asdict
+from config_manager import get_config_manager
 
 
 @dataclass
@@ -27,23 +40,6 @@ class SectionInfo:
     status: str = "pending"  # pending, generated, refined
     word_count: int = 0
     review_notes: str = ""
-    needs_revision: bool = False
-
-    def to_dict(self):
-        return asdict(self)
-    
-    @classmethod
-    def from_dict(cls, data):
-        return cls(
-            number=data.get('number', ''),
-            title=data.get('title', ''),
-            description=data.get('description', ''),
-            content=data.get('content', ''),
-            status=data.get('status', 'pending'),
-            word_count=data.get('word_count', 0),
-            review_notes=data.get('review_notes', ''),
-            needs_revision=data.get('needs_revision', False)
-        )
     needs_revision: bool = False
 
     def to_dict(self):
@@ -139,10 +135,11 @@ class ProjectInitializer:
         # Ensure project directory exists
         os.makedirs(self.project_dir, exist_ok=True)
         
+        # Initialize configuration manager
+        self.config_manager = get_config_manager()
+        
         # Use common config.json in main directory, project-specific files in project directory
         self.config_file = os.path.join(os.getcwd(), "config.json")
-        # Use common variables.json in main directory  
-        self.variables_file = os.path.join(os.getcwd(), "variables.json")
         # Use common organogram.json in main directory
         self.organogram_file = os.path.join(os.getcwd(), "organogram.json")
         self.sections_file = os.path.join(self.project_dir, "sections.json")
@@ -185,27 +182,11 @@ class ProjectInitializer:
             json.dump(sections_data, f, indent=2, ensure_ascii=False)
     
     def save_variables(self, variables: Dict, manual_description: str):
-        """Save variables to common file, merging with existing variables"""
-        # Load existing variables
-        existing_variables = {}
-        if os.path.exists(self.variables_file):
-            try:
-                with open(self.variables_file, 'r', encoding='utf-8') as f:
-                    existing_variables = json.load(f)
-            except Exception as e:
-                print(f"⚠️  Could not load existing variables: {e}")
-        
-        # Add source information to each variable
+        """Save variables to YAML configuration (now deprecated - ConfigManager handles this)"""
+        print(f"⚠️  Variable saving is now handled by ConfigManager. Generated variables:")
         for var_name, var_info in variables.items():
-            var_info['source_manual'] = manual_description
-            var_info['added_date'] = datetime.now().isoformat()
-        
-        # Merge new variables with existing ones
-        existing_variables.update(variables)
-        
-        # Save merged variables
-        with open(self.variables_file, 'w', encoding='utf-8') as f:
-            json.dump(existing_variables, f, indent=2, ensure_ascii=False)
+            print(f"  {var_name}: {var_info}")
+        print("  Please use the Configuration Editor to update company information.")
 
     def load_organogram(self) -> Dict:
         """Load organizational structure from organogram.json"""
@@ -625,89 +606,39 @@ def update_input_file(remaining_manuals: List[str]):
             f.write(f"{manual}\n")
 
 def review_common_variables():
-    """Allow user to review and update the common variables file"""
-    variables_file = os.path.join(os.getcwd(), "variables.json")
-    
-    if not os.path.exists(variables_file):
-        print("❌ No variables.json file found.")
-        return False
-    
-    # Load current variables
-    with open(variables_file, 'r', encoding='utf-8') as f:
-        variables = json.load(f)
-    
-    if not variables:
-        print("📝 Variables file is empty.")
-        return False
+    """Allow user to review and update the common configuration"""
+    config_manager = get_config_manager()
     
     print("\n" + "="*60)
-    print("📋 COMMON VARIABLES REVIEW")
+    print("CONFIGURATION REVIEW")
     print("="*60)
-    print(f"Found {len(variables)} variables from all manuals:")
+    
+    # Show current configuration
+    variables = config_manager.get_variables_dict()
+    
+    if not variables:
+        print("No configuration found. Please set up your company information.")
+        return False
+    
+    print(f"Current configuration:")
+    print(f"  Company Name: {config_manager.get('organization.profile.name')}")
+    print(f"  Email: {config_manager.get('organization.contact.digital.email')}")
+    print(f"  Jurisdiction: {config_manager.get('organization.legal.jurisdiction')}")
     print()
     
-    # Group variables by source manual
-    by_source = {}
-    for var_name, var_info in variables.items():
-        source = var_info.get('source_manual', 'Unknown')
-        if source not in by_source:
-            by_source[source] = []
-        by_source[source].append((var_name, var_info))
-    
-    # Display variables grouped by source
-    for source, var_list in by_source.items():
-        print(f"📖 From: {source}")
-        for var_name, var_info in var_list:
-            category = var_info.get('category', 'general')
-            description = var_info.get('description', 'No description')
-            default = var_info.get('default_value', '[NOT SET]')
-            print(f"   {var_name} ({category}): {description}")
-            print(f"      Default: {default}")
-        print()
-    
-    # Ask if user wants to update variables
-    update_choice = input("Do you want to update any variable values? (y/n): ").strip().lower()
-    if update_choice != 'y':
-        print("Variables unchanged.")
-        return False
-    
-    # Allow user to update values
-    updated_variables = variables.copy()
-    modifications_made = False
-    
-    print("\n📝 Variable Update Mode")
-    print("Enter new values for variables (press Enter to keep current value)")
-    print("Type 'done' to finish updating")
-    print("-" * 50)
-    
-    for var_name, var_info in variables.items():
-        current_value = var_info.get('default_value', '[NOT SET]')
-        category = var_info.get('category', 'general')
-        description = var_info.get('description', 'No description')
-        
-        print(f"\n{var_name} ({category})")
-        print(f"Description: {description}")
-        print(f"Current value: {current_value}")
-        
-        new_value = input("New value (or Enter to keep current): ").strip()
-        
-        if new_value.lower() == 'done':
-            break
-        
-        if new_value and new_value != current_value:
-            updated_variables[var_name]['default_value'] = new_value
-            print(f"✅ Updated {var_name}")
-            modifications_made = True
-    
-    if modifications_made:
-        # Save updated variables
-        with open(variables_file, 'w', encoding='utf-8') as f:
-            json.dump(updated_variables, f, indent=2, ensure_ascii=False)
-        print(f"\n✅ Variables have been updated in {variables_file}")
-        return True
+    # Validate configuration
+    validation = config_manager.validate()
+    if validation.is_valid:
+        print("Configuration is valid")
     else:
-        print("\n📝 No changes made to variables.")
-        return False
+        print("Configuration has issues:")
+        for error in validation.errors[:5]:  # Show first 5 errors
+            print(f"  - {error}")
+    
+    print()
+    print("To modify configuration, run: python config_editor_gui.py")
+    
+    return validation.is_valid
 
 
 def batch_initialize_projects():
@@ -807,7 +738,8 @@ def batch_initialize_projects():
             project_status = {
                 'manual_description': manual_description,
                 'created_date': datetime.now().isoformat(),
-                'stage': 'initialization',
+                'stage': 1,
+                'stage_name': 'project_initiation',
                 'project_name': project_name,
                 'policy_type': policy_info['policy_type'],
                 'responsibilities': policy_info['responsibilities']
@@ -837,12 +769,15 @@ def batch_initialize_projects():
             
             # Update status
             initializer.save_status({
-                'phase': 'project_initialized',
+                'stage': 1,
+                'stage_name': 'project_initiation',
+                'phase': 'stage_1_completed',
                 'total_sections': len(sections),
                 'completed_sections': 0,
                 'manual_description': manual_description,
                 'variables_count': len(variables),
-                'project_name': project_name
+                'project_name': project_name,
+                'ready_for_stage_2': True
             })
             
             print(f"✅ Successfully initialized: {manual_description}")
@@ -869,22 +804,186 @@ def batch_initialize_projects():
     else:
         print("📝 All manuals from input.txt have been processed!")
     
-    # Prompt user to review variables
-    variables_file = os.path.join(os.getcwd(), "variables.json")
-    if os.path.exists(variables_file):
-        print(f"\n� Common variables file has been updated with variables from all manuals.")
-        print(f"📁 Please review and update: {variables_file}")
-        print(f"�🚀 After updating variables, run 'python generate_content.py' to generate content")
+    # Prompt user to review configuration
+    config_manager = get_config_manager()
+    print(f"\n📝 Configuration has been updated with variables from all manuals.")
+    print(f"📁 Please review: config/company.yaml or run 'python config_editor_gui.py'")
+    print(f"🚀 Next step: Run 'python project_expansion.py' for Stage 2 (Project Expansion)")
+    print(f"   This will allow you to edit sections and add notes for all projects.")
 
 
 def main():
-    """Main function - now handles batch processing from input.txt"""
-    if len(os.sys.argv) > 1 and os.sys.argv[1] == '--single':
+    """Main function with command line argument support"""
+    parser = argparse.ArgumentParser(description='Policy Manual Project Initialization - Stage 1')
+    parser.add_argument('--organogram', type=str, help='Path to organogram JSON file')
+    parser.add_argument('--manuals', nargs='+', help='List of manual types to generate')
+    parser.add_argument('--single', action='store_true', help='Run single manual mode (legacy)')
+    
+    args = parser.parse_args()
+    
+    if args.organogram and args.manuals:
+        # GUI mode with specific organogram and manuals
+        gui_batch_mode(args.organogram, args.manuals)
+    elif args.single:
         # Legacy single manual mode
         single_manual_mode()
     else:
-        # Default batch mode
+        # Default batch mode from input.txt
         batch_initialize_projects()
+
+
+def gui_batch_mode(organogram_path: str, manual_types: List[str]):
+    """Process specific manuals with given organogram (called from GUI)"""
+    print("🚀 Policy Manual Project Initialization (GUI Mode)")
+    print("=" * 60)
+    
+    try:
+        # Load organogram
+        with open(organogram_path, 'r', encoding='utf-8') as f:
+            organogram = json.load(f)
+        
+        print(f"📋 Loaded organogram: {organogram_path}")
+        print(f"📚 Selected manuals: {', '.join(manual_types)}")
+        
+        # Get company info from organogram
+        company_name = organogram.get('company_name', 'Your Company')
+        
+        # Load or create common configuration
+        config_file = os.path.join(os.getcwd(), "config.json")
+        existing_config = {}
+        if os.path.exists(config_file):
+            try:
+                with open(config_file, 'r', encoding='utf-8') as f:
+                    existing_config = json.load(f)
+                print("📋 Found existing configuration")
+            except Exception as e:
+                print(f"⚠️  Could not load existing config: {e}")
+                
+        # Use existing config or defaults
+        lm_studio_url = existing_config.get('lm_studio_url', 'http://localhost:1234')
+        model_name = existing_config.get('model_name', 'local-model')
+        
+        print(f"🔌 Using LM Studio at {lm_studio_url} with model {model_name}")
+        
+        # Initialize client
+        client = LMStudioClient(lm_studio_url, model_name)
+        
+        # Test connection
+        if not client.test_connection():
+            print("❌ Failed to connect to LM Studio. Please check the URL and ensure LM Studio is running.")
+            sys.exit(1)
+        
+        print("✅ Successfully connected to LM Studio!")
+        
+        # Common configuration
+        config = {
+            'lm_studio_url': lm_studio_url,
+            'model_name': model_name,
+            'company_name': company_name,
+            'organogram_path': organogram_path,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Process each selected manual
+        processed_manuals = []
+        failed_manuals = []
+        
+        for manual_type in manual_types:
+            if manual_type not in organogram.get('manuals', {}):
+                print(f"⚠️  Manual type '{manual_type}' not found in organogram - skipping")
+                failed_manuals.append(manual_type)
+                continue
+                
+            print(f"\n🔄 Processing {manual_type}...")
+            
+            manual_info = organogram['manuals'][manual_type]
+            manual_description = manual_info.get('description', f'{manual_type} Policy Manual')
+            
+            # Generate project name
+            project_name = re.sub(r'[^a-zA-Z0-9\s]', '', manual_type)
+            project_name = re.sub(r'\s+', '_', project_name).lower()[:30]
+            
+            try:
+                # Check if project already exists
+                project_dir = f"{project_name}_project"
+                if os.path.exists(project_dir):
+                    print(f"⚠️  Project '{project_name}' already exists. Skipping...")
+                    processed_manuals.append(manual_type)
+                    continue
+                
+                # Initialize project
+                initializer = ProjectInitializer(client, project_name)
+                
+                # Get organogram-based policy responsibilities
+                policy_info = initializer.determine_policy_responsibilities(manual_description)
+                
+                # Save project-specific information
+                project_status = {
+                    'manual_description': manual_description,
+                    'created_date': datetime.now().isoformat(),
+                    'stage': 1,
+                    'stage_name': 'project_initiation',
+                    'project_name': project_name,
+                    'policy_type': policy_info['policy_type'],
+                    'responsibilities': policy_info['responsibilities']
+                }
+                initializer.save_status(project_status)
+                
+                # Generate table of contents
+                sections = []
+                max_attempts = 3
+                for attempt in range(max_attempts):
+                    sections = initializer.generate_toc(manual_description)
+                    if sections:
+                        break
+                    print(f"Attempt {attempt + 1} failed, retrying...")
+                
+                if not sections:
+                    print(f"❌ Failed to generate TOC for: {manual_type}")
+                    failed_manuals.append(manual_type)
+                    continue
+                
+                # Save sections
+                initializer.save_sections(sections)
+                
+                # Generate and save variables
+                variables = initializer.generate_variables(manual_description)
+                initializer.save_variables(variables, manual_description)
+                
+                # Update status
+                initializer.save_status({
+                    'stage': 1,
+                    'stage_name': 'project_initiation',
+                    'phase': 'stage_1_completed',
+                    'total_sections': len(sections),
+                    'completed_sections': 0,
+                    'manual_description': manual_description,
+                    'variables_count': len(variables),
+                    'ready_for_stage_2': True
+                })
+                
+                processed_manuals.append(manual_type)
+                print(f"✅ {manual_type}: {len(sections)} sections, {len(variables)} variables")
+                
+            except Exception as e:
+                print(f"❌ Failed to process {manual_type}: {str(e)}")
+                failed_manuals.append(manual_type)
+                continue
+        
+        # Save common configuration
+        with open(config_file, 'w', encoding='utf-8') as f:
+            json.dump(config, f, indent=2, ensure_ascii=False)
+        
+        print(f"\n🎉 GUI batch processing completed!")
+        print(f"✅ Processed: {len(processed_manuals)} manuals")
+        if failed_manuals:
+            print(f"❌ Failed: {len(failed_manuals)} manuals")
+        print(f"📄 Common config saved to: config.json")
+        print(f"\n🚀 Next step: Use GUI or run 'python project_expansion.py' for Stage 2")
+        
+    except Exception as e:
+        print(f"❌ Error during GUI batch processing: {e}")
+        sys.exit(1)
 
 
 def single_manual_mode():
@@ -971,7 +1070,8 @@ def single_manual_mode():
         project_status = {
             'manual_description': manual_description,
             'created_date': datetime.now().isoformat(),
-            'stage': 'initialization',
+            'stage': 1,
+            'stage_name': 'project_initiation',
             'project_name': project_name,
             'policy_type': policy_info['policy_type'],
             'responsibilities': policy_info['responsibilities']
@@ -997,21 +1097,25 @@ def single_manual_mode():
         
         # Update status
         initializer.save_status({
-            'phase': 'project_initialized',
+            'stage': 1,
+            'stage_name': 'project_initiation',
+            'phase': 'stage_1_completed',
             'total_sections': len(sections),
             'completed_sections': 0,
             'manual_description': manual_description,
-            'variables_count': len(variables)
+            'variables_count': len(variables),
+            'ready_for_stage_2': True
         })
         
-        print(f"\n🎉 Project initialization completed!")
+        print(f"\n🎉 Stage 1 (Project Initiation) completed!")
         print(f"📁 Project folder: {project_dir}")
         print(f"📄 Files created:")
         print(f"   - ../config.json (common configuration)")
         print(f"   - sections.json ({len(sections)} sections)")
-        print(f"   - ../variables.json (common variables)")
+        print(f"   - ../config/company.yaml (YAML configuration)")
         print(f"   - status.json (project status)")
-        print(f"\n🚀 Next step: Run 'python generate_content.py' to generate section content")
+        print(f"\n🚀 Next step: Run 'python project_expansion.py' for Stage 2 (Project Expansion)")
+        print(f"   This will allow you to edit sections and add user notes.")
         
     except Exception as e:
         print(f"❌ Error during initialization: {e}")
